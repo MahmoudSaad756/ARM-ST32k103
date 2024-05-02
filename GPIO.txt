@@ -1,0 +1,5 @@
+bit masking let you change in bit number in one instruction
+
+atomic operation in OS let you make some instraction without interrupts
+
+schmitt-triggered to noise 
