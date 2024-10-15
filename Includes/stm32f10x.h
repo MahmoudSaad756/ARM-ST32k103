@@ -8365,6 +8365,7 @@ typedef struct
 
 #define MODIFY_REG(REG, CLEARMASK, SETMASK)  WRITE_REG((REG), (((READ_REG(REG)) & (~(CLEARMASK))) | (SETMASK)))
 
+#define assert_param(expr) ((void)0)
 /**
   * @}
   */
