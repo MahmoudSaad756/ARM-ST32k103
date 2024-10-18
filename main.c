@@ -1,10 +1,10 @@
 #include "includes\stm32f10x.h"
+#include "includes\rf_stm32f1_led.h"
+#include "Includes\rf_stm32f1_delay.h"
 #include "Includes\stm32f10x_gpio.h"
 #include "Includes\stm32f10x_usart.h"
 #include "Includes\stm32f10x_rcc.h"
 
-
-#define LED_PIN 13
 
 const char MyStr[8]={'M','a','h','m','o','u','d'};
 
@@ -47,7 +47,7 @@ void USART1_Init(void)
     gpioa_init_struct.GPIO_Speed = GPIO_Speed_50MHz;
     gpioa_init_struct.GPIO_Mode = GPIO_Mode_AF_PP;
     GPIO_Init(GPIOA, &gpioa_init_struct);
-    /* GPIOA PIN9 alternative function Rx */
+    /* GPIOA PIN10 alternative function Rx */
     gpioa_init_struct.GPIO_Pin = GPIO_Pin_10;
     gpioa_init_struct.GPIO_Speed = GPIO_Speed_50MHz;
     gpioa_init_struct.GPIO_Mode = GPIO_Mode_IN_FLOATING;
@@ -126,29 +126,21 @@ void USART1_IRQHandler(void)
 int main(void)
 {
     // initialize the system frequency @ 56Mhz
-    // SystemInit();
-    // Initialize the button
-    button_setup();
+    SystemInit();
+    // Delay initialize
+    delay_init();
+    // all LED initialize
+    FM_Led_Init();
 	/* Initialize USART1 */
     USART1_Init();
 
-	long int i = 0;
-    RCC->APB2ENR |= RCC_APB2ENR_IOPCEN; // Enable GPIOC clock
 
-    GPIOC->CRH &= ~(GPIO_CRH_CNF13 | GPIO_CRH_MODE13); // Clear CNF13 and MODE13 bits
-    GPIOC->CRH |= GPIO_CRH_MODE13_0; // Set pin PC13 as output mode (max speed 10 MHz) 
     while (1)
     {
-		if (i > 100000 )
-		{
-			GPIOC->ODR ^= (1 << LED_PIN); // Toggle the LED on pin PC13
+        
+            delay_ms(500);
+			FM_Led_Toggle(LED_1);
 			UU_PutString(USART1, "Button Pushed\r\n");
-			i=0;
-		}
-		else
-		{
-			i++;
-		}
 				
     }
 }
